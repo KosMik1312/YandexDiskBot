@@ -41,7 +41,7 @@ async def load_to_disk_text(message: types.Message):
 
 # Хэндлер, который получает URL файла-фото и загружает его на диск
 @router.message(F.photo)
-async def get_file_url(message: types.Message, bot, client, TOKEN, LEXICON_RU: dict):
+async def get_file_url(message: types.Message, bot, client, TOKEN, LEXICON_RU: dict, bot_url):
     folder = LEXICON_RU['folder']
     await message.answer(f'Фото получил! Загружаю на ваш Яндекс.Диск в папку {folder}!')
     # Получаем file_id документа
@@ -51,13 +51,13 @@ async def get_file_url(message: types.Message, bot, client, TOKEN, LEXICON_RU: d
 
     # Формируем URL
     file_path = file.file_path
-    url = f"https://api.telegram.org/file/bot{TOKEN}/{file_path}"
+    url = f"{bot_url}{TOKEN}/{file_path}"
 
     # Получаем имя файла для загрузки на диск
     file_name = file_path[-11:]
 
     #await message.answer(f"URL вашего файла: {url}")# если нужно показать URL
-    await client.upload_url(f"https://api.telegram.org/file/bot{TOKEN}/{file_path}", f'disk:/{folder}/{file_name}')
+    await client.upload_url(f"{bot_url}{TOKEN}/{file_path}", f'disk:/{folder}/{file_name}')
     await bot.send_message(message.from_user.id, 'Фотографии загружены!')
 
 
@@ -77,4 +77,3 @@ async def list_directory_text(message: types.Message, client, LEXICON_RU: dict):
         await message.answer(f"Папки для загрузки не существует. Я создам!\n Ошибка: {str(e)}")
         await client.mkdir(f"/{folder}/")
         await message.answer(f'Папка "{folder}" успешно создана.')
-
