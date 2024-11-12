@@ -1,10 +1,9 @@
 import asyncio
 from typing import Any, Awaitable, Callable, Dict
-from aiogram import BaseMiddleware, types
-from aiogram.types import TelegramObject, message
-from db.db import create_database
+from aiogram import BaseMiddleware
+from aiogram.types import TelegramObject
 
-
+# функция отслеживает все сообщения пользователя и записывает их в базу данных
 class MessageMiddleware(BaseMiddleware):
     def __init__(self, db_conn):
         self.db_conn = db_conn

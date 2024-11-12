@@ -36,10 +36,10 @@ async def main():
                              'LEXICON_RU': LEXICON_RU,
                              'bot_url': config.bot_url})
 
-    # Start the bot if it hasn't been started already
+    # Запуск полинга
     await dp.start_polling(config.bot)
 
-    # Check the validity of the token
+    # Проверка валидности токена Яндекс.Диска
     async with config.client:
         await config.client.check_token()
 
