@@ -42,3 +42,14 @@ https://yandex.ru/dev/disk/rest
 5. После успешной установки пакетов запускаем бота - python yadiskbot.py
 
 В случае каких либо вопросов по работе бота можно обращаться к разработчику в Телеграм - @KosMik1312
+
+## Известная проблема с запуском на PythonAnyWhere
+Если при запуске выдаёт ошибку соединения, то необходимо поправить config.py:
+1. Для начала нужно импортировать установить модуль aiohttp-socks в bash-консоли
+pip install aiohttp-socks
+2. Затем нужно импортировать модуль AiohttpSession
+from aiogram.client.session.aiohttp import AiohttpSession
+3. Теперь нужно создать переменную session
+session = AiohttpSession(proxy='http://proxy.server:3128') # в proxy указан прокси сервер pythonanywhere, он нужен для подключения
+4. В объекте бота указать session=session
+bot = Bot(token='...', session=session)

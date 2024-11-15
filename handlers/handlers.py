@@ -4,6 +4,8 @@ from aiogram import types, Router, F
 from aiogram.filters.command import Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from db.db import create_database
+
 router = Router()
 
 
@@ -77,3 +79,19 @@ async def list_directory_text(message: types.Message, client, LEXICON_RU: dict):
         await message.answer(f"Папки для загрузки не существует. Я создам!\n Ошибка: {str(e)}")
         await client.mkdir(f"/{folder}/")
         await message.answer(f'Папка "{folder}" успешно создана.')
+
+
+# Хэндлер на команду /history
+@router.message(Command("history"))
+async def cmd_history(message: types.Message, client, LEXICON_RU: dict):
+    conn = await create_database()
+    async with conn.cursor() as cursor:
+        await cursor.execute("SELECT timestamp, command FROM telegram_commands ORDER BY timestamp DESC LIMIT 10")
+        records = await cursor.fetchall()
+
+    response = "История запросов:\n"
+    for record in reversed(records):
+        response += f"{record[0]} - {record[1]}\n"
+
+    await message.answer(response)
+    await conn.close()

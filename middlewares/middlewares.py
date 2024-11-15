@@ -3,6 +3,7 @@ from typing import Any, Awaitable, Callable, Dict
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
 
+
 # функция отслеживает все сообщения пользователя и записывает их в базу данных
 class MessageMiddleware(BaseMiddleware):
     def __init__(self, db_conn):
@@ -15,12 +16,12 @@ class MessageMiddleware(BaseMiddleware):
             data: Dict[str, Any]
     ) -> Any:
         # ...
-        if event.message:
+        if event.message and event.message.text is not None and event.message.text.startswith('/'):
             user_id = event.message.from_user.id
             text = event.message.text
             try:
                 async with self.db_conn.cursor() as cursor:
-                    await cursor.execute('INSERT INTO telegram_commands (user_id, command) VALUES (?, COALESCE(?, ""))',
+                    await cursor.execute('INSERT INTO telegram_commands (user_id, command) VALUES (?, ?)',
                                          (user_id, text))
                     await self.db_conn.commit()
             except asyncio.exceptions.CancelledError as e:

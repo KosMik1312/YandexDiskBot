@@ -8,7 +8,8 @@ async def set_main_menu(bot: Bot):
         BotCommand(command="/start", description="Запуск бота"),
         BotCommand(command="/load", description="Загрузка"),
         BotCommand(command="/dir", description="Показать список файлов"),
-        BotCommand(command="/help", description="Справка по работе бота"),
+        BotCommand(command="/history", description="История запросов"),
+        BotCommand(command="/help", description="Справка по работе бота")
     ]
     await bot.set_my_commands(main_menu_commands)
 
